@@ -10,12 +10,15 @@ jobs:
         uses: actions/checkout@v3
       - name: fetch dependencies
         run: |
-          sudo apt install git libreadline-dev zlib1g-dev gnutls-dev libexpat1-dev
+          sudo apt install git autoconf libreadline-dev zlib1g-dev gnutls-dev libexpat1-dev libtool gettext automake gnulib libncurses5-dev libncursesw5-dev
           git clone git://git.savannah.gnu.org/gnulib
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v3
+      - name: build repository
+        run: |
+          ./autogen.sh
+          make
+      - name: archive build results
+        uses: actions/upload-artifact@v3.1.2
         with:
-          name: dist-without-markdown
-          path: |
-            dist
-            !dist/**/*.md
+          name: binary
+          path: src/lftp
+          retention-days: 30
