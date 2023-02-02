@@ -1,0 +1,21 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: fetch dependencies
+        run: |
+          apt install readline-devel zlib-devel gnutls-devel expat-devel
+          git clone git://git.savannah.gnu.org/gnulib
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-without-markdown
+          path: |
+            dist
+            !dist/**/*.md
